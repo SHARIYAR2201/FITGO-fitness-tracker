@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fitgo — Fitness Tracker & Habit Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter+Tight:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080808;--fg:#fafafa;--pri:#b5f030;--prif:#080808;--mut:#8c8c8c;--bd:#1f1f1f;--card:#0f0f0f;--glow:rgba(181,240,48,.35);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;margin:0}
+html,body{background:var(--bg);color:var(--fg);font:300 16px/1.7 'Inter Tight',system-ui,sans-serif}
+h1,h2,h3,.d{font-family:'Space Grotesk',system-ui,sans-serif}
+h1{font-weight:700;letter-spacing:-.04em;text-transform:uppercase;line-height:.9}
+h2{font-weight:700;letter-spacing:-.02em;font-size:clamp(28px,4vw,44px);line-height:1.1}
+h3{font-weight:600;letter-spacing:.01em}
+.eb{font:500 12px 'Space Grotesk';letter-spacing:.12em;text-transform:uppercase;color:var(--pri)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+.btn{background:var(--pri);color:var(--prif);border:0;padding:12px 22px;font:600 14px 'Space Grotesk';letter-spacing:.04em;text-transform:uppercase;transition:box-shadow .3s}
+.btn:hover{box-shadow:0 0 24px var(--glow)}
+.btn:disabled{opacity:.5}
+.ghost{background:none;color:var(--fg);border:1px solid #555}
+.ghost:hover{border-color:var(--pri);box-shadow:none}
+.sm{padding:6px 12px;font-size:12px}
+.lnk{background:none;border:0;color:var(--mut);font-size:13px;padding:4px}.lnk:hover{color:var(--pri)}
+input,select,textarea{background:#0a0a0a;border:1px solid var(--bd);padding:10px 12px;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--pri);outline:0}
+label{display:block;font:500 12px 'Space Grotesk';letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:12px 0 4px}
+.card{background:var(--card);border:1px solid var(--bd);padding:22px;transition:box-shadow .3s,border-color .3s,transform .3s}
+.card.hv:hover{box-shadow:0 0 30px var(--glow);border-color:rgba(181,240,48,.5);transform:translateY(-3px)}
+.grid{display:grid;gap:16px}
+.g4{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.num{font:700 40px/1 'Space Grotesk';letter-spacing:-.04em;color:var(--pri)}
+.mut{color:var(--mut);font-size:14px}
+.bar{height:6px;background:#1c1c1c;margin:10px 0 6px}.bar i{display:block;height:100%;background:var(--pri);box-shadow:0 0 10px var(--glow)}
+.row{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+/* landing */
+.nav{position:fixed;inset:0 0 auto 0;height:70px;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:env(safe-area-inset-top,0px) 6vw 0;background:rgba(8,8,8,.92);backdrop-filter:blur(12px)}
+.logo{font:700 22px 'Space Grotesk';letter-spacing:.1em;color:var(--pri)}
+.hero{min-height:100vh;position:relative;display:flex;flex-direction:column;justify-content:center;padding:100px 8vw 60px;overflow:hidden;background:radial-gradient(ellipse at 80% 90%,rgba(181,240,48,.22),transparent 55%),linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px) 0 0/48px 48px,linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px) 0 0/48px 48px,#080808}
+.hero h1{font-size:clamp(64px,13vw,160px)}
+.hero h1 span{display:inline-block;animation:up .7s cubic-bezier(.22,1,.36,1) both}
+@keyframes up{from{opacity:0;transform:translateY(60px)}}
+.pill{display:inline-block;border:1px solid var(--pri);border-radius:99px;padding:4px 14px;margin-bottom:24px;font:500 12px 'Space Grotesk';letter-spacing:.12em;color:var(--pri)}
+.tick{overflow:hidden;white-space:nowrap;border-block:1px solid var(--bd);background:var(--card);padding:16px 0}
+.tick div{display:inline-flex;gap:32px;animation:mq 22s linear infinite;font:500 14px 'Space Grotesk';letter-spacing:.08em;text-transform:uppercase}
+.tick:hover div{animation-play-state:paused}
+@keyframes mq{to{transform:translateX(-50%)}}
+.sec{padding:90px 6vw}
+.cta{background:var(--pri);color:var(--prif);padding:80px 6vw;text-align:center}
+.cta h2{font-size:clamp(36px,6vw,72px)}
+.cta .btn{background:#080808;color:#fff;margin-top:24px}.cta .btn:hover{background:#222}
+.foot{background:#040404;border-top:2px solid var(--pri);padding:40px 6vw;text-align:center}
+/* app */
+.shell{display:flex;min-height:100vh}
+.side{width:230px;border-right:1px solid var(--bd);padding:24px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:4px}
+.side .logo{margin:0 8px 20px}
+.tab{background:none;border:0;border-left:2px solid transparent;text-align:left;padding:10px 12px;font:500 15px 'Space Grotesk';color:var(--mut)}
+.tab.on{color:var(--pri);border-color:var(--pri);background:#111}
+.main{flex:1;padding:32px 4vw 90px;min-width:0;max-width:1100px}
+.main .out{display:none}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:60;padding:16px}
+.modal .card{max-width:560px;width:100%;max-height:90vh;overflow:auto}
+.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:var(--pri);color:var(--prif);padding:10px 20px;font:600 14px 'Space Grotesk';z-index:70}
+.empty{border:1px dashed #333;padding:40px 20px;text-align:center}.empty p{margin-bottom:14px}
+.chk{width:28px;height:28px;border:2px solid #444;background:none;flex:none;color:var(--prif);font-weight:700}
+.chk.on{background:var(--pri);border-color:var(--pri)}
+.err{color:#ff6b6b;font-size:14px;margin-top:10px}
+@media(max-width:800px){.side{position:fixed;inset:auto 0 0 0;top:auto;width:100%;height:auto;flex-direction:row;z-index:50;background:#0a0a0a;border:0;border-top:1px solid var(--bd);padding:4px 4px calc(4px + env(safe-area-inset-bottom,0px));overflow-x:auto}
+.side .logo,.side .out{display:none}.tab{border:0;border-bottom:2px solid transparent;padding:10px 14px;flex:1;text-align:center}.tab.on{border-color:var(--pri)}.shell{display:block}.main .out{display:inline-block}.toast{bottom:90px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head>
+<body><div id="app"></div>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const put=(c,i)=>FB.put(c,i).catch(()=>toast('Could not save. Check your connection.'));
+const del=(c,id)=>FB.del(c,id).catch(()=>toast('Could not delete. Check your connection.'));
+const addTo=(c,o)=>{c==='workouts'?data()[c].unshift(o):data()[c].push(o);put(c,o)};
+const uid=()=>Math.random().toString(36).slice(2,10);
+const iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const today=()=>iso(new Date());
+const add=(s,n)=>{const d=new Date(s+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+n);return d.toISOString().slice(0,10)};
+const mon=s=>add(s,-((new Date(s+'T00:00:00Z').getUTCDay()+6)%7));
+const LIB={Chest:['Bench Press','Incline Bench Press','Dumbbell Press','Push Ups','Chest Fly'],Back:['Lat Pulldown','Seated Cable Row','Barbell Row','Dumbbell Row'],Shoulders:['Shoulder Press','Lateral Raise','Front Raise','Rear Delt Fly'],Arms:['Bicep Curl','Hammer Curl','Tricep Pushdown','Overhead Tricep Extension'],Legs:['Squat','Leg Press','Romanian Deadlift','Lunges','Leg Curl','Leg Extension','Calf Raise'],Core:['Plank','Crunch','Leg Raise','Mountain Climbers']};
+let S={u:null,tab:'dashboard',view:'land',wk:null,open:null,q:''};
+const data=()=>S.d;
+function toast(m){const t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.textContent=m;document.body.append(t);setTimeout(()=>t.remove(),2200)}
+function modal(html){const m=document.createElement('div');m.className='modal';m.id='modal';m.innerHTML='<div class="card" role="dialog" aria-modal="true">'+html+'</div>';document.body.append(m)}
+const closeM=()=>{const m=$('modal');m&&m.remove()};
+function ask(msg,fn){window._ask=()=>{closeM();fn()};modal(`<h3>${esc(msg)}</h3><p class="mut">This can't be undone.</p><div class="row" style="margin-top:18px"><button class="btn ghost sm" onclick="closeM()">Cancel</button><button class="btn sm" onclick="_ask()">Delete</button></div>`)}
+/* habits */
+function streak(h){const wk=h.freq==='weekly',key=s=>wk?mon(s):s,step=wk?7:1,set=new Set(h.done.map(key));let cur=0,d=key(today());if(!set.has(d))d=add(d,-step);while(set.has(d)){cur++;d=add(d,-step)}let best=0,run=0;[...set].sort().forEach((k,i,a)=>{run=i&&k===add(a[i-1],step)?run+1:1;best=Math.max(best,run)});return{cur,best,total:h.done.length,isDone:set.has(key(today()))}}
+function rate(h){if(h.freq==='weekly')return streak(h).isDone?100:0;const s=new Set(h.done);let n=0;for(let i=0;i<7;i++)if(s.has(add(today(),-i)))n++;return Math.round(n/7*100)}
+function toggleHabit(id){const h=data().habits.find(x=>x.id===id),wk=h.freq==='weekly',key=s=>wk?mon(s):s;if(streak(h).isDone)h.done=h.done.filter(d=>key(d)!==key(today()));else h.done.push(today());put('habits',h);render();toast(streak(h).isDone?'Habit completed.':'Habit unchecked.')}
+function habitForm(){modal(`<h3>New habit</h3><label for="hn">Name</label><input id="hn" placeholder="Drink water"><label for="hd">Description</label><input id="hd"><div class="grid g2" style="gap:0 12px"><div><label for="hc">Category</label><select id="hc"><option>Health</option><option>Fitness</option><option>Mind</option><option>Study</option><option>Sleep</option></select></div><div><label for="hf">Frequency</label><select id="hf"><option value="daily">Daily</option><option value="weekly">Weekly</option></select></div><div><label for="ht">Target</label><input id="ht" type="number" min="1" value="8"></div><div><label for="hu">Unit</label><input id="hu" value="glasses"></div></div><div id="he" class="err" role="alert"></div><div class="row" style="margin-top:18px"><button class="btn ghost sm" onclick="closeM()">Cancel</button><button class="btn sm" onclick="saveHabit()">Save habit</button></div>`)}
+function saveHabit(){const n=$('hn').value.trim(),t=+$('ht').value;if(!n)return $('he').textContent='Give the habit a name.';if(!(t>0))return $('he').textContent='Target must be greater than 0.';addTo('habits',{id:uid(),name:n,desc:$('hd').value.trim(),cat:$('hc').value,freq:$('hf').value,target:t,unit:$('hu').value.trim(),done:[]});closeM();render();toast('Habit created.')}
+const delHabit=id=>ask('Delete this habit?',()=>{data().habits=data().habits.filter(h=>h.id!==id);del('habits',id);render();toast('Habit deleted.')});
+/* workouts */
+function startWorkout(){S.wk={name:'',date:today(),dur:45,notes:'',ex:[]};S.tab='new';render()}
+function syncWk(){const w=S.wk;if(!w||!$('wn'))return;w.name=$('wn').value;w.date=$('wd').value;w.dur=$('wu').value;w.notes=$('wt').value;w.ex.forEach((e,i)=>{e.sets.forEach((s,j)=>{s.reps=$(`r${i}_${j}`).value;s.w=$(`w${i}_${j}`).value})})}
+function addEx(){syncWk();const v=$('exsel').value;if(!v)return;S.wk.ex.push({name:v,sets:[{reps:'',w:''}]});render()}
+function addSet(i){syncWk();S.wk.ex[i].sets.push({reps:'',w:''});render()}
+function rmEx(i){syncWk();S.wk.ex.splice(i,1);render()}
+function finishWorkout(){syncWk();const w=S.wk;if(!w.name.trim())return $('we').textContent='Name your workout.';if(!(+w.dur>0))return $('we').textContent='Duration must be greater than 0.';if(!w.ex.length)return $('we').textContent='Add at least one exercise.';for(const e of w.ex)for(const s of e.sets){if(!(+s.reps>0)||s.w===''||+s.w<0)return $('we').textContent=`Check reps and weight for ${e.name}: reps must be above 0, weight can't be negative.`}
+addTo('workouts',{id:uid(),name:w.name.trim(),date:w.date,dur:+w.dur,notes:w.notes,ex:w.ex.map(e=>({name:e.name,sets:e.sets.map(s=>({reps:+s.reps,w:+s.w}))}))});S.wk=null;S.tab='workouts';render();toast('Workout saved successfully.')}
+const delWorkout=id=>ask('Delete this workout?',()=>{data().workouts=data().workouts.filter(w=>w.id!==id);S.open=null;del('workouts',id);render();toast('Workout deleted.')});
+/* goals */
+const gp=g=>{const span=g.target-g.start;return span===0?100:Math.max(0,Math.min(100,Math.round((g.cur-g.start)/span*100)))};
+function goalForm(){modal(`<h3>New goal</h3><label for="gn">Goal</label><input id="gn" placeholder="Complete 4 workouts per week"><div class="grid g2" style="gap:0 12px"><div><label for="gt">Type</label><select id="gt"><option>Weight</option><option>Workout</option><option>Habit</option><option>Custom</option></select></div><div><label for="gu">Unit</label><input id="gu" value="kg"></div><div><label for="gs">Starting value</label><input id="gs" type="number" step="any" value="0"></div><div><label for="gg">Target value</label><input id="gg" type="number" step="any"></div></div><label for="gdl">Deadline (optional)</label><input id="gdl" type="date"><div id="ge" class="err" role="alert"></div><div class="row" style="margin-top:18px"><button class="btn ghost sm" onclick="closeM()">Cancel</button><button class="btn sm" onclick="saveGoal()">Save goal</button></div>`)}
+function saveGoal(){const n=$('gn').value.trim(),s=parseFloat($('gs').value),t=parseFloat($('gg').value);if(!n)return $('ge').textContent='Give the goal a name.';if(isNaN(s)||isNaN(t)||s<0||t<0)return $('ge').textContent='Enter valid, non-negative start and target values.';addTo('goals',{id:uid(),name:n,type:$('gt').value,unit:$('gu').value.trim(),start:s,cur:s,target:t,dl:$('gdl').value});closeM();render();toast('Goal created.')}
+function setGoal(id,v){const g=data().goals.find(x=>x.id===id),n=parseFloat(v);if(isNaN(n)||n<0)return toast('Enter a valid number.');g.cur=n;put('goals',g);render();toast('Goal updated.')}
+const delGoal=id=>ask('Delete this goal?',()=>{data().goals=data().goals.filter(g=>g.id!==id);del('goals',id);render();toast('Goal deleted.')});
+/* auth */
+const AE={'auth/email-already-in-use':'An account with that email already exists.','auth/invalid-credential':'Email or password is incorrect.','auth/wrong-password':'Email or password is incorrect.','auth/user-not-found':'Email or password is incorrect.','auth/weak-password':'Password must be at least 8 characters.','auth/too-many-requests':'Too many attempts. Try again in a few minutes.','auth/network-request-failed':'Network error. Check your connection.'};
+const busy=on=>{const b=document.querySelector('form .btn');if(b)b.disabled=on};
+async function register(){const n=$('rn').value.trim(),e=$('re').value.trim().toLowerCase(),p=$('rp').value,c=$('rc').value,er=$('ae');if(!n)return er.textContent='Enter your name.';if(!/^\S+@\S+\.\S+$/.test(e))return er.textContent='Enter a valid email address.';if(p.length<8)return er.textContent='Password must be at least 8 characters.';if(p!==c)return er.textContent='Passwords do not match.';busy(1);S.reg=1;try{const u=await FB.register(n,e,p);await enter(u,n)}catch(x){er.textContent=AE[x.code]||'Could not create your account. Try again.';busy(0)}S.reg=0}
+async function login(){busy(1);try{await FB.login($('le').value.trim().toLowerCase(),$('lp').value)}catch(x){$('ae').textContent=AE[x.code]||'Could not log in. Try again.';busy(0)}}
+async function enter(u,name){S.u={id:u.uid,name:name||u.displayName||u.email.split('@')[0]};S.d=await FB.load(u.uid).catch(()=>{toast('Could not load your data.');return{habits:[],workouts:[],goals:[]}});S.view='app';S.tab='dashboard';render()}
+const logout=()=>FB.out();
+function boot(){FB.watch(async u=>{if(u){if(S.reg||(S.u&&S.u.id===u.uid))return;await enter(u)}else{S.u=null;S.d=null;if(S.view==='app')S.view='land';render()}})}
+const go=v=>{S.view=v;render();scrollTo(0,0)};
+/* views */
+function landing(){const t='TRACK EVERY SET <b style="color:var(--pri)">·</b> BUILD DAILY HABITS <b style="color:var(--pri)">·</b> KEEP YOUR STREAK <b style="color:var(--pri)">·</b> HIT YOUR GOALS <b style="color:var(--pri)">·</b> ';
+const word=(w,o)=>w.split('').map((c,i)=>`<span style="animation-delay:${.5+(o+i)*.05}s">${c===' '?'&nbsp;':c}</span>`).join('');
+return `<nav class="nav"><span class="logo">FITGO</span><div><button class="lnk" onclick="go('login')">Log in</button> <button class="btn sm" onclick="go('register')">Start today</button></div></nav>
+<header class="hero"><div><span class="pill">[ FITNESS TRACKER & HABIT PLANNER ]</span></div><h1>${word('BUILD',0)}<br>${word('YOUR',5)}<br>${word('BEST SELF',9)}</h1><p style="margin:24px 0;font-size:20px;max-width:480px">Log workouts, keep habits alive, and watch real progress build. No shortcuts. No excuses.</p><div class="row" style="justify-content:flex-start"><button class="btn" onclick="go('register')">Get started</button><button class="btn ghost" onclick="go('login')">Log in</button></div></header>
+<div class="tick"><div><span>${t}</span><span>${t}</span></div></div>
+<section class="sec"><span class="eb">What you get</span><h2 style="margin:8px 0 32px">Everything in one place</h2><div class="grid g3">
+<div class="card hv" style="border-top:2px solid var(--pri)"><h3>Workout tracker</h3><p class="mut">Pick from a built-in exercise library and log sets, reps and weight. Review every session in your history.</p></div>
+<div class="card hv" style="border-top:2px solid var(--pri)"><h3>Habit streaks</h3><p class="mut">Daily and weekly habits with current streak, longest streak and completion rate, all calculated from your check-ins.</p></div>
+<div class="card hv" style="border-top:2px solid var(--pri)"><h3>Goals</h3><p class="mut">Set a target, update your progress and see the percentage and amount remaining.</p></div></div></section>
+<section class="cta"><h2>READY TO START?</h2><p>Your account and data are stored securely in the cloud. No card needed.</p><button class="btn" onclick="go('register')">Create your account</button></section>
+<footer class="foot"><span class="logo">FITGO</span><p class="mut">Built for people who show up.</p></footer>`}
+function authView(reg){const f=(i,l,t='text',x='')=>`<label for="${i}">${l}</label><input id="${i}" type="${t}" ${x}>`;
+return `<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px"><form class="card" style="max-width:400px;width:100%" onsubmit="event.preventDefault();${reg?'register':'login'}()"><span class="logo">FITGO</span><h2 style="margin:8px 0 4px;font-size:30px">${reg?'Create account':'Welcome back'}</h2>${reg?f('rn','Name','text','autocomplete="name"')+f('re','Email','email','autocomplete="email"')+f('rp','Password','password','autocomplete="new-password"')+f('rc','Confirm password','password','autocomplete="new-password"'):f('le','Email','email','autocomplete="email"')+f('lp','Password','password','autocomplete="current-password"')}<div id="ae" class="err" role="alert"></div><button class="btn" style="width:100%;margin-top:18px">${reg?'Create account':'Log in'}</button><p class="mut" style="margin-top:14px;text-align:center">${reg?'Have an account?':'New here?'} <button type="button" class="lnk" style="color:var(--pri)" onclick="go('${reg?'login':'register'}')">${reg?'Log in':'Create account'}</button> · <button type="button" class="lnk" onclick="go('land')">Back</button></p></form></div>`}
+const empty=(t,b,fn)=>`<div class="empty"><p>${t}</p><button class="btn sm" onclick="${fn}">${b}</button></div>`;
+const stat=(n,l)=>`<div class="card"><div class="num">${n}</div><div class="mut">${l}</div></div>`;
+function dash(){const d=data(),hs=d.habits,st=hs.map(streak),done=st.filter(s=>s.isDone).length,best=Math.max(0,...st.map(s=>s.cur)),ws=mon(today()),wkN=d.workouts.filter(w=>mon(w.date)===ws).length,gs=d.goals.filter(g=>gp(g)<100),avg=d.goals.length?Math.round(d.goals.reduce((a,g)=>a+gp(g),0)/d.goals.length):null,td=d.workouts.find(w=>w.date===today()),hr=new Date().getHours(),gr=hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';
+return `<h2>${gr}, ${esc(S.u.name.split(' ')[0])}</h2><p class="mut" style="margin-bottom:24px">${new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})}</p>
+<div class="grid g4">${stat(td?'Done':'Open','Today\'s workout')}${stat(hs.length?done+'/'+hs.length:'–','Habits done today')}${stat(best+'d','Best current streak')}${stat(wkN,'Workouts this week')}${stat(gs.length,'Active goals')}${stat(avg===null?'–':avg+'%','Average goal progress')}</div>
+<h3 style="margin:32px 0 12px">Today's habits</h3>${hs.length?`<div class="grid">${hs.map((h,i)=>habitRow(h,st[i],true)).join('')}</div>`:empty('Create your first habit.','Add habit',"S.tab='habits';render();habitForm()")}
+<h3 style="margin:32px 0 12px">Latest workout</h3>${d.workouts[0]?wCard(d.workouts[0]):empty("You haven't logged a workout yet.",'Start workout','startWorkout()')}`}
+function habitRow(h,s,mini){return `<div class="card row"><div class="row" style="justify-content:flex-start"><button class="chk ${s.isDone?'on':''}" aria-label="${s.isDone?'Uncheck':'Complete'} ${esc(h.name)}" aria-pressed="${s.isDone}" onclick="toggleHabit('${h.id}')">${s.isDone?'✓':''}</button><div><h3>${esc(h.name)}</h3><div class="mut">${h.target} ${esc(h.unit)} · ${h.freq}${mini?'':' · '+esc(h.cat)}</div></div></div><div class="mut" style="text-align:right">🔥 ${s.cur} ${h.freq==='weekly'?'wk':'d'} streak${mini?'':`<br>Longest ${s.best} · ${s.total} total · ${rate(h)}% this week<br><button class="lnk" onclick="delHabit('${h.id}')">Delete</button>`}</div></div>`}
+function habits(){const hs=data().habits;return `<div class="row"><h2>Habits</h2><button class="btn sm" onclick="habitForm()">New habit</button></div><div class="grid" style="margin-top:20px">${hs.length?hs.map(h=>habitRow(h,streak(h))).join(''):empty('Create your first habit.','Add habit','habitForm()')}</div>`}
+const vol=w=>w.ex.reduce((a,e)=>a+e.sets.length,0);
+function wCard(w){return `<div class="card hv" style="cursor:pointer" tabindex="0" role="button" onclick="S.open='${w.id}';render()" onkeydown="if(event.key==='Enter'){S.open='${w.id}';render()}"><div class="row"><h3>${esc(w.name)}</h3><span class="mut">${w.date}</span></div><p class="mut">${w.dur} min · ${w.ex.length} exercises · ${vol(w)} sets</p>${w.notes?`<p class="mut">${esc(w.notes)}</p>`:''}</div>`}
+function workouts(){const d=data();if(S.open){const w=d.workouts.find(x=>x.id===S.open);if(!w){S.open=null;return workouts()}return `<button class="lnk" onclick="S.open=null;render()">← History</button><div class="row"><h2>${esc(w.name)}</h2><button class="btn ghost sm" onclick="delWorkout('${w.id}')">Delete workout</button></div><p class="mut">${w.date} · ${w.dur} min</p>${w.notes?`<p>${esc(w.notes)}</p>`:''}<div class="grid g2" style="margin-top:16px">${w.ex.map(e=>`<div class="card"><h3>${esc(e.name)}</h3>${e.sets.map((s,i)=>`<div class="row mut"><span>Set ${i+1}</span><span>${s.w} ${unitW()} × ${s.reps}</span></div>`).join('')}</div>`).join('')}</div>`}
+const q=S.q.toLowerCase(),list=d.workouts.filter(w=>w.name.toLowerCase().includes(q));
+return `<div class="row"><h2>Workouts</h2><button class="btn sm" onclick="startWorkout()">Start workout</button></div><input aria-label="Search workouts" placeholder="Search by name" value="${esc(S.q)}" oninput="S.q=this.value;const p=this.selectionStart;render();$('wq').focus();$('wq').setSelectionRange(p,p)" id="wq" style="margin:16px 0"><div class="grid">${list.length?list.map(wCard).join(''):d.workouts.length?'<p class="mut">No workouts match that search.</p>':empty("You haven't logged a workout yet.",'Start workout','startWorkout()')}</div>`}
+const unitW=()=>'kg';
+function newWorkout(){const w=S.wk;return `<button class="lnk" onclick="S.wk=null;S.tab='workouts';render()">← Cancel</button><h2 style="margin-bottom:8px">New workout</h2><div class="grid g3" style="gap:0 12px"><div><label for="wn">Workout name</label><input id="wn" value="${esc(w.name)}" placeholder="Upper body"></div><div><label for="wd">Date</label><input id="wd" type="date" value="${w.date}"></div><div><label for="wu">Duration (min)</label><input id="wu" type="number" min="1" value="${esc(w.dur)}"></div></div><label for="wt">Notes</label><textarea id="wt" rows="2">${esc(w.notes)}</textarea>
+<div style="margin:20px 0" class="grid">${w.ex.map((e,i)=>`<div class="card"><div class="row"><h3>${esc(e.name)}</h3><button class="lnk" onclick="rmEx(${i})">Remove</button></div>${e.sets.map((s,j)=>`<div class="row" style="flex-wrap:nowrap;margin-top:8px"><span class="mut" style="width:48px">Set ${j+1}</span><input id="w${i}_${j}" type="number" min="0" step="any" placeholder="kg" aria-label="Weight, set ${j+1}" value="${esc(s.w)}"><input id="r${i}_${j}" type="number" min="1" placeholder="reps" aria-label="Reps, set ${j+1}" value="${esc(s.reps)}"></div>`).join('')}<button class="btn ghost sm" style="margin-top:10px" onclick="addSet(${i})">Add set</button></div>`).join('')}</div>
+<div class="row" style="flex-wrap:nowrap"><select id="exsel" aria-label="Exercise"><option value="">Choose an exercise</option>${Object.entries(LIB).map(([g,a])=>`<optgroup label="${g}">${a.map(x=>`<option>${x}</option>`).join('')}</optgroup>`).join('')}</select><button class="btn ghost" style="flex:none" onclick="addEx()">Add exercise</button></div><div id="we" class="err" role="alert"></div><button class="btn" style="margin-top:20px" onclick="finishWorkout()">Finish and save workout</button>`}
+function goals(){const gs=data().goals;return `<div class="row"><h2>Goals</h2><button class="btn sm" onclick="goalForm()">New goal</button></div><div class="grid g2" style="margin-top:20px">${gs.length?gs.map(g=>{const p=gp(g),rem=Math.abs(g.target-g.cur);return `<div class="card"><div class="row"><h3>${esc(g.name)}</h3><span class="eb">${g.type}</span></div><div class="row"><span class="num" style="font-size:32px">${p}%</span><span class="mut">${g.cur} / ${g.target} ${esc(g.unit)}</span></div><div class="bar" role="progressbar" aria-valuenow="${p}" aria-valuemin="0" aria-valuemax="100"><i style="width:${p}%"></i></div><p class="mut">${p>=100?'Goal reached.':rem+' '+esc(g.unit)+' remaining'}${g.dl?' · due '+g.dl:''}</p><div class="row" style="margin-top:10px;flex-wrap:nowrap"><input type="number" step="any" min="0" aria-label="Current value" value="${g.cur}" onchange="setGoal('${g.id}',this.value)"><button class="lnk" onclick="delGoal('${g.id}')">Delete</button></div></div>`}).join(''):empty('Set your first fitness goal.','Add goal','goalForm()')}</div>`}
+function appView(){const tabs=[['dashboard','Dashboard'],['habits','Habits'],['workouts','Workouts'],['goals','Goals']],t=S.tab==='new'?'workouts':S.tab;
+const body=S.tab==='new'&&S.wk?newWorkout():{dashboard:dash,habits,workouts,goals}[S.tab]();
+return `<div class="shell"><nav class="side" aria-label="Main"><span class="logo">FITGO</span>${tabs.map(([k,l])=>`<button class="tab ${t===k?'on':''}" onclick="S.tab='${k}';S.open=null;render()">${l}</button>`).join('')}<button class="tab out" style="margin-top:auto" onclick="logout()">Log out</button></nav><main class="main">${body}<button class="lnk out" style="margin-top:40px" onclick="logout()">Log out</button></main></div>`}
+function render(){const a=$('app');a.innerHTML=S.view==='land'?landing():S.view==='login'?authView(0):S.view==='register'?authView(1):appView()}
+$('app').innerHTML='<div style="min-height:100vh;display:grid;place-items:center" class="mut">Loading…</div>';
+</script>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged,updateProfile} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {getFirestore,collection,doc,setDoc,getDocs,deleteDoc} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+// Firebase config for project fitgo-56029
+const cfg={apiKey:"AIzaSyBl0H5B2XOzrn0w1PSDFK9MwboimIn9NQM",authDomain:"fitgo-56029.firebaseapp.com",projectId:"fitgo-56029",storageBucket:"fitgo-56029.firebasestorage.app",messagingSenderId:"57289779420",appId:"1:57289779420:web:cbe7e8caaf2c0e5440ac19"};
+if(!cfg.apiKey){document.getElementById('app').innerHTML='<p style="padding:40px;max-width:520px">Add your Firebase config at the top of the module script in index.html, then reload.</p>'}
+else{
+const app=initializeApp(cfg),auth=getAuth(app),db=getFirestore(app),C=['habits','workouts','goals'];
+window.FB={
+register:async(n,e,p)=>{const c=await createUserWithEmailAndPassword(auth,e,p);await updateProfile(c.user,{displayName:n});return c.user},
+login:(e,p)=>signInWithEmailAndPassword(auth,e,p),
+out:()=>signOut(auth),
+watch:f=>onAuthStateChanged(auth,f),
+put:(c,it)=>setDoc(doc(db,'users',auth.currentUser.uid,c,it.id),it),
+del:(c,id)=>deleteDoc(doc(db,'users',auth.currentUser.uid,c,id)),
+load:async uid=>{const r={};await Promise.all(C.map(async c=>{r[c]=(await getDocs(collection(db,'users',uid,c))).docs.map(d=>d.data())}));r.workouts.sort((a,b)=>b.date.localeCompare(a.date));return r}
+};
+boot();}
+</script></body></html>
